@@ -32,32 +32,55 @@ users = [
 ]
 
 
-def get_birthdays_per_week(users: list) -> list:
+def get_birthdays_per_week(users: list) -> None:
+
     FDAYS = 7
     curent_day = datetime.today()
+    exect_list = ['Saturday','Sunday']
     seven_days_list = []
+    exect = ''
+    
+    
+    if curent_day.strftime('%A') == 'Monday':
+        curent_day -= timedelta(days=2)
+    
     for d in range(FDAYS):
+    
         delta = timedelta(days = d)
-        seven_days_list.append(curent_day + delta)
-   
-    result_list = []
-    
-    
-    for day in seven_days_list:
-        names = ''
-        exect = ''
-        for user in users:
-            
-            if user['birthday'].month == day.month and user['birthday'].day == day.day and day.strftime('%A') != 'Saturday' and day.strftime('%A') != 'Sunday':
+        seven_days_list.append(curent_day.date() + delta)
 
-                # if day.strftime('%A') != 'Saturday' and day.strftime('%A') != 'Sunday':
-                name_day = day.strftime('%A')
+    print(seven_days_list)
+
+   
+    for item in seven_days_list:
+        names = ''
+        
+        for user in users:
+            if user['birthday'].month == item.month and user['birthday'].day == item.day:
+                
+                name_day = item.strftime('%A')  
                 user_name = user['name']
-                if names != '':
-                    names = ', '.join([names, user_name])
+
+                if name_day not in exect_list:
+                    if names != '':
+                        names = ', '.join([names, user_name])
+                    else:
+                        names = user_name
                 else:
-                    names = user_name
-                               
-        print(f'{name_day}: {names}')
+                    if exect != '':
+                        exect = ', '.join([exect, user_name])
+                    else:
+                        exect = user_name
+            
+        if name_day in exect_list:
+            pass
+        elif name_day == 'Monday':
+            print(f'{name_day}: {names}, {exect}')
+        else:
+            print(f'{name_day}: {names}')
+    print(exect)
+        
+
+    
 
 get_birthdays_per_week(users)

@@ -39,7 +39,7 @@ def get_birthdays_per_week(users: list) -> None:
     exect_list = ['Saturday','Sunday']
     seven_days_list = []
     exect = ''
-    
+    users_week = []
     
     if curent_day.strftime('%A') == 'Monday':
         curent_day -= timedelta(days=2)
@@ -48,18 +48,24 @@ def get_birthdays_per_week(users: list) -> None:
     
         delta = timedelta(days = d)
         seven_days_list.append(curent_day.date() + delta)
+        # print(curent_day.date() + delta)
 
-    print(seven_days_list)
+    for user in users:
+        
+        if datetime(year=2023, month=user['birthday'].month, day=user['birthday'].day).date() in seven_days_list:
+            users_week.append(user)
+            # print(user)
 
-   
+    
+    
     for item in seven_days_list:
         names = ''
         
-        for user in users:
-            if user['birthday'].month == item.month and user['birthday'].day == item.day:
+        for current_user in users_week:
+            if current_user['birthday'].day == item.day and current_user['birthday'].month == item.month:
                 
-                name_day = item.strftime('%A')  
-                user_name = user['name']
+                name_day = item.strftime('%A') 
+                user_name = current_user['name']
 
                 if name_day not in exect_list:
                     if names != '':
@@ -75,10 +81,13 @@ def get_birthdays_per_week(users: list) -> None:
         if name_day in exect_list:
             pass
         elif name_day == 'Monday':
-            print(f'{name_day}: {names}, {exect}')
+            if exect != '':
+                print(f'{name_day}: {names}, {exect}')
+            else:
+                print(f'{name_day}: {names}')
         else:
             print(f'{name_day}: {names}')
-    print(exect)
+   
         
 
     
